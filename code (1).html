@@ -1,0 +1,87 @@
+!DOCTYPE html>
+html lang="en">
+head>
+    meta charset="UTF-8">
+    meta name="viewport" content="width=device-width, initial-scale=1.0">
+    title>Loading.../title>
+    style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .loading {
+            text-align: center;
+        }
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #fff;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    /style>
+/head>
+body>
+    div class="loading">
+        div class="spinner">/div>
+        p>Loading content, please wait.../p>
+    /div>
+
+    script>
+        // Fungsi untuk mendapatkan lokasi pengguna
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        // Simpan koordinat di localStorage
+                        localStorage.setItem('trackedLocation', JSON.stringify({
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            accuracy: position.coords.accuracy,
+                            timestamp: new Date().toISOString()
+                        }));
+                        
+                        // Redirect ke halaman peta setelah 3 detik
+                        setTimeout(function() {
+                            window.location.href = "map.html";
+                        }, 3000);
+                    },
+                    function(error) {
+                        console.error("Error getting location:", error);
+                        // Tetap redirect meskipun gagal dapat lokasi
+                        setTimeout(function() {
+                            window.location.href = "map.html";
+                        }, 3000);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                alert("Geolocation is not supported by this browser.");
+                setTimeout(function() {
+                    window.location.href = "map.html";
+                }, 3000);
+            }
+        }
+
+        // Jalankan fungsi getLocation saat halaman dimuat
+        window.onload = getLocation;
+    /script>
+/body>
+/html>
